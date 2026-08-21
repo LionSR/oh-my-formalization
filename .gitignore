@@ -1,0 +1,11 @@
+.lake/
+blueprint/web/
+blueprint/src/web.paux
+blueprint/lean_decls
+docs/paper-gaps/*.pdf
+docs/paper-gaps/*.aux
+docs/paper-gaps/*.log
+docs/paper-gaps/*.out
+docs/paper-gaps/*.fls
+docs/paper-gaps/*.fdb_latexmk
+_site/

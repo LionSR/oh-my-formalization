@@ -1,0 +1,19 @@
+# Configuration for the shared texra-blueprint tooling.
+# https://github.com/LionSR/texra-blueprint
+
+[paper_gaps]
+dir         = "docs/paper-gaps"
+site_base   = "https://example.github.io/my-project"
+blob_base   = "https://github.com/example/my-project/blob/main/docs/paper-gaps"
+bib_author  = "The {MyProject} contributors"
+institution = "MyProject"
+title       = "MyProject paper-gap notes"
+scan_roots  = ["MyProject", "blueprint/src", "docs"]
+skip        = ["command.tex", "template.tex"]
+
+# The source-key registry: every note is named <key>_<topic>.tex —
+# author initials plus two-digit year, or a canonical short name for a
+# book or review; "self" for internal audits with no external source.
+[paper_gaps.sources]
+demo = "arXiv:0000.00000 (a model source; replace with your first real one)"
+self = "internal theorem-surface audit, no single external source"

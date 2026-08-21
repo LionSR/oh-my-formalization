@@ -1,0 +1,49 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: texra-ai/lean-env-action/blueprint-system-deps@v1
+      - uses: texra-ai/lean-env-action/leanblueprint@v1
+        with:
+          extra-pip-packages: 'git+https://github.com/LionSR/texra-blueprint@v0.1.0'
+      - name: Build blueprint (web)
+        working-directory: blueprint
+        run: leanblueprint web
+      - name: Build paper-gap notes and index
+        run: |
+          texra-blueprint paper-gaps build
+          texra-blueprint paper-gaps site _site/paper-gaps
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp -r blueprint/web _site/blueprint
+          printf '<!doctype html><meta charset="utf-8"><title>MyProject</title>\n<h1>MyProject</h1>\n<p><a href="blueprint/">Blueprint</a> · <a href="paper-gaps/">Paper-gap notes</a></p>\n' > _site/index.html
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
