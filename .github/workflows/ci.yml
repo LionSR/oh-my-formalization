@@ -30,9 +30,12 @@ jobs:
         working-directory: blueprint
         run: |
           set -o pipefail
-          leanblueprint web 2>&1 | tee /tmp/web.log
-          if grep -qE "^ERROR:|WARNING: (unrecognized command/environment|Using default renderer)" /tmp/web.log; then
-            echo "::error::Blueprint build produced renderer errors (see log above)"
+          # texra-blueprint web wraps leanblueprint web and fails when the
+          # renderer meets a command it does not know; the log is kept for
+          # the unresolved-label check below.
+          texra-blueprint web 2>&1 | tee /tmp/web.log
+          if grep -q "^ERROR:" /tmp/web.log; then
+            echo "::error::Blueprint has unresolved labels (see ERROR lines above)"
             exit 1
           fi
 
