@@ -24,8 +24,9 @@ website and PDF, a citable paper-gap note apparatus, and CI for all of it.
   gates, the paper-gap checks, and an artifact-based GitHub Pages deploy —
   no gh-pages branch.
 - **Agent skills**: the [texra-lean-skills](https://github.com/texra-ai/texra-lean-skills)
-  plugin auto-installs for Claude Code sessions; other agents:
-  `npx skills add texra-ai/texra-lean-skills`.
+  bundle works with any coding agent — install with
+  `npx skills add texra-ai/texra-lean-skills` (Claude Code sessions pick it
+  up automatically from the repository settings).
 
 ## Quickstart
 
@@ -49,9 +50,9 @@ Then:
    GitHub Actions**. Your site appears with the blueprint (web and PDF) and
    the paper-gap index.
 3. Replace `MyProject/Basic.lean` and `blueprint/src/chapter/ch01.tex` with
-   your first real result. In a Claude Code session, the preinstalled skills
-   will interview you about the paper you are formalizing and scaffold from
-   there (see `CLAUDE.md`).
+   your first real result. Any coding agent with the skills installed will
+   interview you about the paper you are formalizing and scaffold from
+   there (see `AGENTS.md`).
 
 The only file you configure afterwards is `texra-blueprint.toml`.
 
