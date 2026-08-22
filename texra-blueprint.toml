@@ -10,6 +10,7 @@ institution = "MyProject"
 title       = "MyProject paper-gap notes"
 scan_roots  = ["MyProject", "blueprint/src", "docs"]
 skip        = ["command.tex", "template.tex"]
+require_verdict = true
 
 # The source-key registry: every note is named <key>_<topic>.tex —
 # author initials plus two-digit year, or a canonical short name for a

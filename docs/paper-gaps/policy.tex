@@ -109,7 +109,7 @@ source the note examines: the authors' initials followed by a two-digit year
 (\path{cpsv16}, \path{pgvwc07}, \path{spwc10}), or an established short name
 for a book or review (\path{wolf}, \path{rmp}, \path{mpu}). A note that
 audits the formal development itself, with no single external source, takes
-a reserved key for the project itself (for TNLean, \path{tnlean}). The list of registered keys is maintained alongside
+a reserved key for the project itself, e.g. \path{self}. The list of registered keys is maintained alongside
 the index generator, which rejects an unregistered key.
 
 The topic part states the mathematical subject, not the history of the note.
@@ -123,7 +123,17 @@ The conclusion of a note should give a verdict. The usual classifications are:
 a notational clarification, a local correction, a scope restriction, an
 unfaithful theorem, a source claim that is false as printed, or an open gap.
 The classification should follow the mathematics, not the amount of formal
-work required.
+work required. Each note declares its classification and its status
+machine-readably with \verb|\gapnote{<kind>}{<status>}| directly after
+\verb|\maketitle|: the kind in the kebab-cased vocabulary above
+(\path{clarification}, \path{local-correction}, \path{scope-restriction},
+\path{unfaithful}, \path{false-source}, \path{open-gap}) and the status
+one of \path{open}, \path{wip}, \path{resolved}, or \path{historical};
+\path{wip} marks a gap whose elimination is actively underway and still
+counts as live. Severity is derived from the kind, so it is never stated
+separately. A resolved note keeps its classification and changes only its
+status; the published index lists live notes first and dims the resolved
+ones.
 
 A local correction records a small adjustment whose corrected statement is still
 available in the cited argument. A scope restriction records a theorem proved
