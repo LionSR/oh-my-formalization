@@ -49,3 +49,9 @@ Everything shared arrives by version pin: bump the `texra-blueprint` tag in
 the two workflows (and the `lean-env-action` tag) and read the diff. Your
 repo owns its mathematics, its chapters, its notes, and its config — nothing
 else to sync.
+
+`init.sh` records the template commit your instance was stamped from in the
+`[template]` table of `texra-blueprint.toml`. That is the merge base for any
+future template-update tooling (a [copier](https://github.com/copier-org/copier)-style
+replay of template changes onto your instance) — kept from day one because
+it cannot be reconstructed later.

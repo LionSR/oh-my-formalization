@@ -30,5 +30,18 @@ done
 git mv MyProject.lean "${NAME}.lean"
 git mv MyProject "${NAME}"
 
+# Record where this instance came from: the template and the commit it was
+# instantiated from. This is the merge base any future update tooling needs;
+# it cannot be reconstructed later, so it is written now.
+TEMPLATE_REPO="LionSR/oh-my-formalization"
+TEMPLATE_SHA="$(git ls-remote "https://github.com/${TEMPLATE_REPO}" HEAD | cut -f1)"
+{
+  echo ""
+  echo "[template]"
+  echo "repo = \"${TEMPLATE_REPO}\""
+  echo "ref  = \"${TEMPLATE_SHA:-unknown}\"   # commit this instance was stamped from"
+  echo "date = \"$(date +%Y-%m-%d)\""
+} >> texra-blueprint.toml
+
 echo "Stamped ${NAME} (${TITLE}) for ${SLUG}."
 echo "Next: lake exe cache get && lake build, then commit and push."
