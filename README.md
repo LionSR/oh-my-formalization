@@ -66,6 +66,6 @@ split is machine-readable in `copier.yml`.
 ## Under the hood
 
 Blueprint tooling comes from the [texra-blueprint](https://github.com/LionSR/texra-blueprint)
-plasTeX plugin and CLI, pinned by tag in the workflows; CI composes
+plasTeX plugin and CLI, pinned by tag in `.github/actions/blueprint-env`; CI composes
 [lean-env-action](https://github.com/texra-ai/lean-env-action). Both are
 independently versioned — updating a pin is a one-line change.

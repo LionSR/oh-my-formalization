@@ -34,7 +34,6 @@ _skip_if_exists:
   - "texra-blueprint.toml"
   - "docs/paper-gaps/command.tex"
   - "docs/paper-gaps/demo_scope_restriction.tex"
-  - "docs/paper-gaps/demo_local_fix.tex"
   - "README.md"
   - "LICENSE"
 

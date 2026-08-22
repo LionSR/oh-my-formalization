@@ -2,9 +2,8 @@
 """Generate the copier template from the buildable tree.
 
 The rendered fixture on main is the source of truth; this script compiles
-it into a copier template by inverse-stamping the identity strings — the
-exact inverse of init.sh's substitution table. A generated template cannot
-drift from the tree it was generated from.
+it into a copier template by inverse-stamping the identity strings. A
+generated template cannot drift from the tree it was generated from.
 
 Usage: python3 scripts/make_template.py OUT_DIR
 """
@@ -12,10 +11,13 @@ Usage: python3 scripts/make_template.py OUT_DIR
 from __future__ import annotations
 
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
-# Order matters: longest, most specific first (same discipline as init.sh).
+# Order matters: a fixture string containing another must come first, so the
+# longer match is consumed before the shorter one mangles it. main() checks
+# this ordering, and that every entry still occurs in the tree.
 SUBSTITUTIONS = [
     ("https://example.github.io/my-project", "[[ site_url ]]"),
     ("example/my-project", "[[ repo_slug ]]"),
@@ -29,8 +31,13 @@ SUBSTITUTIONS = [
     ("MyProject", "[[ project_name ]]"),
 ]
 
-SKIP_DIRS = {".git", ".lake", "web", "_site", "__pycache__"}
-SKIP_FILES: set[str] = set()
+
+def tracked_files(root: Path) -> list[str]:
+    """The committed tree only: build artifacts never leak into the template."""
+    listing = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "-z"],
+        check=True, capture_output=True, text=True).stdout
+    return sorted(filter(None, listing.split("\0")))
 
 
 def main() -> int:
@@ -39,13 +46,17 @@ def main() -> int:
     if out.exists():
         shutil.rmtree(out)
 
-    for src in sorted(root.rglob("*")):
-        rel = src.relative_to(root)
-        if any(part in SKIP_DIRS for part in rel.parts):
+    for i, (old, _) in enumerate(SUBSTITUTIONS):
+        for later, _ in SUBSTITUTIONS[i + 1:]:
+            if old in later:
+                sys.exit(f"substitution order hazard: {old!r} would corrupt "
+                         f"the later, longer entry {later!r}")
+
+    hits = dict.fromkeys((old for old, _ in SUBSTITUTIONS), 0)
+    for rel_str in tracked_files(root):
+        src = root / rel_str
+        if not src.is_file():
             continue
-        if not src.is_file() or rel.name in SKIP_FILES:
-            continue
-        rel_str = str(rel)
         for old, new in SUBSTITUTIONS:
             rel_str = rel_str.replace(old, new)
         # Store .github under a templated directory name: a branch holding
@@ -60,9 +71,16 @@ def main() -> int:
             shutil.copy2(src, dest)
             continue
         for old, new in SUBSTITUTIONS:
-            text = text.replace(old, new)
+            count = text.count(old)
+            if count:
+                hits[old] += count
+                text = text.replace(old, new)
         dest.write_text(text, encoding="utf-8")
         dest.chmod(src.stat().st_mode)
+
+    if missing := [old for old, count in hits.items() if count == 0]:
+        sys.exit("fixture strings no longer occur in the tree (the template "
+                 "would render incompletely): " + ", ".join(map(repr, missing)))
 
     # The answers-file stub: copier writes the instance's recorded merge base
     # (answers + template version) through this file. Template-only machinery,

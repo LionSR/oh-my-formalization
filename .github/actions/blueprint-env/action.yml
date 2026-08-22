@@ -1,0 +1,12 @@
+name: Blueprint environment
+description: >
+  System TeX/graphviz dependencies, leanblueprint, and the pinned
+  texra-blueprint plugin — the one place the texra-blueprint tag lives.
+
+runs:
+  using: composite
+  steps:
+    - uses: texra-ai/lean-env-action/blueprint-system-deps@v1
+    - uses: texra-ai/lean-env-action/leanblueprint@v1
+      with:
+        extra-pip-packages: 'git+https://github.com/LionSR/texra-blueprint@v0.1.0'

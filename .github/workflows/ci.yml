@@ -19,10 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: texra-ai/lean-env-action/blueprint-system-deps@v1
-      - uses: texra-ai/lean-env-action/leanblueprint@v1
-        with:
-          extra-pip-packages: 'git+https://github.com/LionSR/texra-blueprint@v0.1.0'
+      - uses: ./.github/actions/blueprint-env
       - name: Check paper-gap references and source keys
         run: texra-blueprint paper-gaps check
       - name: Build blueprint (web)
@@ -55,6 +52,6 @@ jobs:
           grep -q "SmokeProj" lakefile.toml
           grep -q "smoke.github.io/smoke-proj" texra-blueprint.toml
           test -f SmokeProj/Basic.lean
-          if grep -rn "\[\[ project\|MyProject" --include="*.toml" --include="*.tex" --include="*.lean" --include="*.yml" . | grep -v copier-answers; then
+          if grep -rn "\[\[\|MyProject" --include="*.toml" --include="*.tex" --include="*.lean" --include="*.yml" --include="*.md" . | grep -v copier-answers; then
             echo "::error::unrendered placeholders or template identity remain"; exit 1
           fi

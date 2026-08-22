@@ -22,10 +22,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
-      - uses: texra-ai/lean-env-action/blueprint-system-deps@v1
-      - uses: texra-ai/lean-env-action/leanblueprint@v1
-        with:
-          extra-pip-packages: 'git+https://github.com/LionSR/texra-blueprint@v0.1.0'
+      - uses: ./.github/actions/blueprint-env
       - name: Build blueprint (web and PDF)
         working-directory: blueprint
         run: |
