@@ -1,6 +1,13 @@
 # Configuration for the shared texra-blueprint tooling.
 # https://github.com/LionSR/texra-blueprint
 
+# Per-chapter dependency graphs: alongside the global dep_graph_document.html,
+# emit one dep_graph_chapter_<n>.html per chapter; boundary keeps the
+# cross-chapter neighbor nodes visible on each chapter page.
+[blueprint.graphs]
+by_chapter = true
+boundary = true
+
 [paper_gaps]
 dir         = "docs/paper-gaps"
 site_base   = "https://example.github.io/my-project"
