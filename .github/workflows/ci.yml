@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,14 +40,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.12'
       - name: Generate the copier template and render an instance
         run: |
-          pip install -q copier
-          python3 scripts/make_template.py /tmp/tpl
-          cd /tmp/tpl && git init -q -b template && git config user.email t@t && git config user.name t && git add -A && git commit -qm gen
+          python3 -m pip install -q copier==9.17.2
+          scripts/build_template_branch.sh /tmp/tpl
           copier copy -d project_name=SmokeProj -d project_title="Smoke Test" \
             -d repo_slug=smoke/smoke-proj --defaults /tmp/tpl /tmp/inst
       - name: Verify the rendered instance

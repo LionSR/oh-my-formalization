@@ -40,6 +40,7 @@ _skip_if_exists:
 _exclude:
   - "copier.yml"
   - "scripts/make_template.py"
+  - "scripts/build_template_branch.sh"
   - ".git"
 
 # Hidden: the template stores the .github directory under a templated name
