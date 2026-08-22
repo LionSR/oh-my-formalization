@@ -15,16 +15,20 @@ import subprocess
 import sys
 from pathlib import Path
 
+# The main-source fixture literal also appears as the copier.yml question
+# default and in texra-blueprint.toml; main() checks both against this one.
+MAIN_SOURCE_FIXTURE = \
+    "arXiv:0000.00000 (a model source; replace with your first real one)"
+
 # Order matters: a fixture string containing another must come first, so the
 # longer match is consumed before the shorter one mangles it. main() checks
 # this ordering, and that every entry still occurs in the tree.
 SUBSTITUTIONS = [
     ("https://example.github.io/my-project", "[[ site_url ]]"),
     ("example/my-project", "[[ repo_slug ]]"),
-    ("MyProject: a formalization blueprint",
-     "[[ project_title ]]: a formalization blueprint"),
+    ("My Project", "[[ project_title ]]"),
     ("A. Author", "[[ author_name ]]"),
-    ('demo = "arXiv:0000.00000 (a model source; replace with your first real one)"',
+    (f'demo = "{MAIN_SOURCE_FIXTURE}"',
      '[[ source_key ]] = "[[ main_source ]]"'),
     ("A Lean 4 formalization built from the oh-my-formalization starter.",
      "[[ project_description ]]"),
@@ -45,6 +49,11 @@ def main() -> int:
     out = Path(sys.argv[1]).resolve()
     if out.exists():
         shutil.rmtree(out)
+
+    copier_text = (root / "copier.yml").read_text(encoding="utf-8")
+    if f'default: "{MAIN_SOURCE_FIXTURE}"' not in copier_text:
+        sys.exit("copier.yml main_source default drifted from "
+                 "MAIN_SOURCE_FIXTURE in scripts/make_template.py")
 
     for i, (old, _) in enumerate(SUBSTITUTIONS):
         for later, _ in SUBSTITUTIONS[i + 1:]:
