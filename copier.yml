@@ -1,0 +1,58 @@
+# Copier configuration for oh-my-formalization.
+# The `template` branch is GENERATED from main by scripts/make_template.py —
+# never edit it by hand. `copier copy` renders it; `copier update` replays
+# template changes onto an instance.
+
+# Render every file through Jinja (with [[ ]] delimiters, so GitHub
+# Actions' ${{ }} expressions pass through untouched).
+_templates_suffix: ""
+
+# All delimiters are moved off Jinja's defaults: {{ }} collides with GitHub
+# Actions expressions, {# with LaTeX macro arguments ({#1}).
+_envops:
+  block_start_string: "[%"
+  block_end_string: "%]"
+  variable_start_string: "[["
+  variable_end_string: "]]"
+  comment_start_string: "[#"
+  comment_end_string: "#]"
+
+# The shared/repo-local partition. Files listed here are rendered once and
+# then owned by the instance: `copier update` never touches them. Everything
+# NOT listed is shared — updates flow in, and local edits there are a design
+# smell (the change belongs upstream).
+_skip_if_exists:
+  - "lean-toolchain"
+  - "lakefile.toml"
+  - "lake-manifest.json"
+  - "[[ project_name ]].lean"
+  - "[[ project_name ]]/**"
+  - "blueprint/src/web.tex"
+  - "blueprint/src/macros/common.tex"
+  - "blueprint/src/chapter/**"
+  - "blueprint/src/references.bib"
+  - "texra-blueprint.toml"
+  - "docs/paper-gaps/command.tex"
+  - "docs/paper-gaps/demo_scope_restriction.tex"
+  - "docs/paper-gaps/demo_local_fix.tex"
+  - "README.md"
+  - "LICENSE"
+
+_exclude:
+  - "copier.yml"
+  - "scripts/make_template.py"
+  - ".git"
+
+project_name:
+  type: str
+  help: Lean package name (UpperCamelCase)
+  validator: "[% if not project_name | regex_search('^[A-Z][A-Za-z0-9]*$') %]must be UpperCamelCase[% endif %]"
+
+project_title:
+  type: str
+  help: Human title of the formalization
+
+repo_slug:
+  type: str
+  help: GitHub owner/repo
+  validator: "[% if not repo_slug | regex_search('^[^/]+/[^/]+$') %]must be owner/repo[% endif %]"

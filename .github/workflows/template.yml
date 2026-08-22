@@ -1,0 +1,34 @@
+name: Template
+
+# Regenerates the copier template from the buildable tree on every push to
+# main. The `template` branch is a pure build artifact of scripts/
+# make_template.py — never edit it by hand; it cannot drift from main
+# because it is compiled from it.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: template-branch
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Generate the copier template
+        run: python3 scripts/make_template.py /tmp/template
+      - name: Push the template branch
+        run: |
+          cd /tmp/template
+          git init -q -b template
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Generated from ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" template
