@@ -64,3 +64,19 @@ repo_slug:
   type: str
   help: GitHub owner/repo
   validator: "[% if not repo_slug | regex_search('^[^/]+/[^/]+$') %]must be owner/repo[% endif %]"
+
+author_name:
+  type: str
+  help: Author name(s) for the blueprint title page and Lean file headers
+  default: "The [[ project_name ]] contributors"
+
+site_url:
+  type: str
+  help: Published site base URL (override for a custom domain)
+  default: "https://[[ repo_slug.split('/')[0] ]].github.io/[[ repo_slug.split('/')[1] ]]"
+
+project_description:
+  type: str
+  help: One sentence describing the formalization
+  default: "A Lean 4 formalization."
+

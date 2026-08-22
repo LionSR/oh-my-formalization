@@ -17,11 +17,13 @@ from pathlib import Path
 
 # Order matters: longest, most specific first (same discipline as init.sh).
 SUBSTITUTIONS = [
-    ("example.github.io/my-project",
-     "[[ repo_slug.split('/')[0] ]].github.io/[[ repo_slug.split('/')[1] ]]"),
+    ("https://example.github.io/my-project", "[[ site_url ]]"),
     ("example/my-project", "[[ repo_slug ]]"),
     ("MyProject: a formalization blueprint",
      "[[ project_title ]]: a formalization blueprint"),
+    ("A. Author", "[[ author_name ]]"),
+    ("A Lean 4 formalization built from the oh-my-formalization starter.",
+     "[[ project_description ]]"),
     ("MyProject", "[[ project_name ]]"),
 ]
 

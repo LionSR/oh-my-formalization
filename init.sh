@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 # Stamp your project's identity into the template.
-# Usage: ./init.sh <PackageName> "<Human Title>" <owner/repo>
+# Usage: ./init.sh <PackageName> "<Human Title>" <owner/repo> \
+#                  ["<Author>"] ["<https://site>"] ["<one-line description>"]
 # Example: ./init.sh KnotInv "Knot Invariants" alice/knot-invariants
 set -euo pipefail
 
-if [ $# -ne 3 ]; then
-  sed -n '2,4p' "$0"; exit 2
+if [ $# -lt 3 ] || [ $# -gt 6 ]; then
+  sed -n '2,5p' "$0"; exit 2
 fi
 
 NAME="$1"; TITLE="$2"; SLUG="$3"
 OWNER="${SLUG%%/*}"; REPO="${SLUG##*/}"
+AUTHOR="${4:-The ${NAME} contributors}"
+SITE="${5:-https://${OWNER}.github.io/${REPO}}"
+DESCRIPTION="${6:-A Lean 4 formalization.}"
 
 if ! [[ "$NAME" =~ ^[A-Z][A-Za-z0-9]*$ ]]; then
   echo "PackageName must be UpperCamelCase (got: $NAME)"; exit 2
@@ -19,9 +23,11 @@ fi
 grep -rl "MyProject\|example/my-project\|example\.github\.io/my-project" \
     --exclude-dir=.git --exclude=init.sh . | while read -r f; do
   sed -i.bak \
-    -e "s|example\.github\.io/my-project|${OWNER}.github.io/${REPO}|g" \
+    -e "s|https://example\.github\.io/my-project|${SITE}|g" \
     -e "s|example/my-project|${SLUG}|g" \
     -e "s|MyProject: a formalization blueprint|${TITLE}: a formalization blueprint|g" \
+    -e "s|A\. Author|${AUTHOR}|g" \
+    -e "s|A Lean 4 formalization built from the oh-my-formalization starter\.|${DESCRIPTION}|g" \
     -e "s|MyProject|${NAME}|g" \
     "$f" && rm "$f.bak"
 done

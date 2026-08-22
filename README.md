@@ -1,5 +1,7 @@
 # oh-my-formalization
 
+> A Lean 4 formalization built from the oh-my-formalization starter.
+
 A starter kit for Lean 4 formalization projects with a
 [leanblueprint](https://github.com/PatrickMassot/leanblueprint) site,
 paper-gap notes, and CI — the framework installed, your repo owning only a
@@ -16,8 +18,10 @@ pipx install copier
 copier copy -r template gh:LionSR/oh-my-formalization my-repo
 ```
 
-Copier asks three questions and records its answers plus the template
-version in `.copier-answers.yml` — the merge base that later lets
+Copier asks six questions — package name, title, `owner/repo`, author,
+site URL (override it for a custom domain; it becomes the permanent
+paper-gap citation base), and a one-line description — and records the
+answers plus the template version in `.copier-answers.yml` — the merge base that later lets
 `copier update -r template` replay framework improvements onto your repo
 while leaving everything you own untouched.
 
