@@ -80,3 +80,14 @@ project_description:
   help: One sentence describing the formalization
   default: "A Lean 4 formalization."
 
+source_key:
+  type: str
+  help: Source key for the main paper you are formalizing (author initials + two-digit year, e.g. cpsv16) — keep the default to decide later
+  default: "demo"
+  validator: "[% if not source_key | regex_search('^[a-z][a-z0-9\\-]*$') %]lowercase kebab, e.g. cpsv16[% endif %]"
+
+main_source:
+  type: str
+  help: The main source, as the registry describes it (e.g. "arXiv:1606.00608 (matrix product density operators)")
+  default: "arXiv:0000.00000 (a model source; replace with your first real one)"
+

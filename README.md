@@ -2,80 +2,69 @@
 
 > A Lean 4 formalization built from the oh-my-formalization starter.
 
-A starter kit for Lean 4 formalization projects with a
-[leanblueprint](https://github.com/PatrickMassot/leanblueprint) site,
-paper-gap notes, and CI — the framework installed, your repo owning only a
-thin configuration. From the family of tools behind
-[TNLean](https://github.com/LionSR/TNLean) and
-[QICLean](https://github.com/LionSR/QICLean).
+A starter kit for Lean 4 formalization projects. One `copier copy` gives you
+a building Lean package on [Mathlib](https://github.com/leanprover-community/mathlib4),
+a [blueprint](https://github.com/PatrickMassot/leanblueprint) published as a
+website and PDF, a citable paper-gap note apparatus, and CI for all of it.
 
-## 20 minutes to a live site
+## What you get
 
-Two ways in. **Copier** (recommended — it gives you framework updates later):
+- **Lean package** pinned to a Mathlib release, with one sample theorem.
+- **Blueprint** (web + PDF): mathematical prose linked to Lean declarations,
+  with a dependency graph. The sample chapter demonstrates every macro you
+  need: `\lean{}`, `\leanok`, `\notready`, `\uses{}`, labels inside displays,
+  citations, and a paper-gap reference.
+- **Paper-gap notes**: wherever your formalization deviates from a cited
+  source (a missing hypothesis, a corrected constant, a restricted scope),
+  you record a short mathematical note. Notes are named against a source-key
+  registry, carry a machine-read verdict (kind + status), and publish as a
+  severity-sorted index with permanent, citable PDF URLs. CI fails on a
+  reference to a missing note.
+- **CI and Pages**: a Lean build with the Mathlib cache, blueprint render
+  gates, the paper-gap checks, and an artifact-based GitHub Pages deploy —
+  no gh-pages branch.
+- **Agent skills**: the [texra-lean-skills](https://github.com/texra-ai/texra-lean-skills)
+  plugin auto-installs for Claude Code sessions; other agents:
+  `npx skills add texra-ai/texra-lean-skills`.
+
+## Quickstart
 
 ```bash
 pipx install copier
-copier copy -r template gh:LionSR/oh-my-formalization my-repo
+copier copy -r template gh:LionSR/oh-my-formalization my-project
+cd my-project && git init && git add -A && git commit -m "Initialize from oh-my-formalization"
 ```
 
-Copier asks six questions — package name, title, `owner/repo`, author,
-site URL (override it for a custom domain; it becomes the permanent
-paper-gap citation base), and a one-line description — and records the
-answers plus the template version in `.copier-answers.yml` — the merge base that later lets
-`copier update -r template` replay framework improvements onto your repo
-while leaving everything you own untouched.
+Copier asks eight questions: package name, title, `owner/repo`, author, site
+URL (override the default for a custom domain — it becomes your permanent
+citation base), a one-line description, and optionally the source key and
+citation of the main paper you are formalizing (keep the defaults to decide
+later).
 
-**Zero-install**: *Use this template* (button above) → clone →
-`./init.sh KnotInv "Knot Invariants" you/knot-invariants`. The stamped
-`[template]` table in `texra-blueprint.toml` records the same merge base,
-so you can adopt copier updates later.
+Then:
 
-Either way, the only file you'll ever configure afterwards is
-`texra-blueprint.toml`.
-3. `lake exe cache get && lake build` — **always fetch the Mathlib cache
-   before the first build**; green in minutes.
-4. Push, then in repo settings enable **Pages → GitHub Actions**. The Pages
-   workflow publishes: blueprint (web) · paper-gap notes index.
-5. Replace `KnotInv/Basic.lean` and `blueprint/src/chapter/ch01.tex`. The
-   sample chapter is a worked example of every macro you need: `\lean{}`,
-   `\leanok`, `\notready`, `\uses{}`, `\label`/`\eqref` inside displays, a
-   citation, and a paper-gap reference.
+1. `lake exe cache get && lake build` — always fetch the Mathlib cache
+   before the first build; green in minutes.
+2. Create the GitHub repository, push, and enable **Settings → Pages →
+   GitHub Actions**. Your site appears with the blueprint (web and PDF) and
+   the paper-gap index.
+3. Replace `MyProject/Basic.lean` and `blueprint/src/chapter/ch01.tex` with
+   your first real result. In a Claude Code session, the preinstalled skills
+   will interview you about the paper you are formalizing and scaffold from
+   there (see `CLAUDE.md`).
 
-## What's inside
+The only file you configure afterwards is `texra-blueprint.toml`.
 
-| Piece | Where | Notes |
-|---|---|---|
-| Lean package + one real theorem | `MyProject/` | Mathlib pinned by `lean-toolchain` + `lakefile.toml` |
-| Blueprint | `blueprint/src/` | plasTeX plugin from [texra-blueprint](https://github.com/LionSR/texra-blueprint); no local patch copies |
-| Paper-gap notes | `docs/paper-gaps/` | policy, template, one demo note; see the `paper-gap-notes` skill in [texra-lean-skills](https://github.com/texra-ai/texra-lean-skills) |
-| Config | `texra-blueprint.toml` | site URLs, source-key registry — the file `paper-gaps check` enforces |
-| CI | `.github/workflows/` | `ci.yml` (Lean build + blueprint gates + reference check), `pages.yml` (site deploy) |
-| Agent skills | `.claude/settings.json` | [texra-lean-skills](https://github.com/texra-ai/texra-lean-skills) auto-installs for Claude Code; other agents: `npx skills add texra-ai/texra-lean-skills` (or that repo's `install.sh` without Node) |
+## Updating
 
-## The paper-gap discipline
+Framework improvements arrive with `copier update -r template` — a three-way
+merge against the recorded template version that leaves everything you own
+(your mathematics, chapters, notes, and config) untouched. The shared/owned
+split is machine-readable in `copier.yml`.
 
-A theorem is formalized only when its Lean signature has no hypothesis
-absent from the cited source. Every deviation — a smuggled hypothesis, a
-corrected constant, a scope restriction — gets a note under
-`docs/paper-gaps/`, named `<sourcekey>_<topic>.tex` against the registry in
-`texra-blueprint.toml`. CI fails on a reference to a missing note or an
-unregistered key. Install the
-[texra-lean-skills](https://github.com/texra-ai/texra-lean-skills) plugin
-and the `paper-gap-notes` skill walks your agent through it.
+## Under the hood
 
-## Shared vs. yours
-
-The partition is machine-readable in `copier.yml`: files in
-`_skip_if_exists` are rendered once and then **yours** (your mathematics,
-`lean-toolchain` — you decide when to bump a toolchain — `lakefile.toml`,
-`web.tex` identity, `macros/common.tex` notation, chapters, notes, config,
-README). Everything else is **shared**: workflows carrying the framework
-pins, `plastex.cfg`, the blueprint preamble (`macros/preamble.tex`), the
-paper-gap policy and template. `copier update -r template` rewrites shared
-files and never touches yours; editing a shared file locally is the signal
-that the change belongs upstream instead.
-
-The `template` branch is generated from `main` by
-`scripts/make_template.py` on every push (the exact inverse of `init.sh`'s
-substitutions), so the copier template can never drift from the buildable
-tree you're looking at.
+Blueprint tooling comes from the [texra-blueprint](https://github.com/LionSR/texra-blueprint)
+plasTeX plugin and CLI, pinned by tag in the workflows; CI composes
+[lean-env-action](https://github.com/texra-ai/lean-env-action). Both are
+independently versioned — updating a pin is a one-line change.

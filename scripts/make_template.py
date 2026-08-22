@@ -22,13 +22,15 @@ SUBSTITUTIONS = [
     ("MyProject: a formalization blueprint",
      "[[ project_title ]]: a formalization blueprint"),
     ("A. Author", "[[ author_name ]]"),
+    ('demo = "arXiv:0000.00000 (a model source; replace with your first real one)"',
+     '[[ source_key ]] = "[[ main_source ]]"'),
     ("A Lean 4 formalization built from the oh-my-formalization starter.",
      "[[ project_description ]]"),
     ("MyProject", "[[ project_name ]]"),
 ]
 
 SKIP_DIRS = {".git", ".lake", "web", "_site", "__pycache__"}
-SKIP_FILES = {"init.sh"}  # zero-install path only; copier replaces it
+SKIP_FILES: set[str] = set()
 
 
 def main() -> int:
