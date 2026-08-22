@@ -44,6 +44,10 @@ def main() -> int:
         rel_str = str(rel)
         for old, new in SUBSTITUTIONS:
             rel_str = rel_str.replace(old, new)
+        # Store .github under a templated directory name: a branch holding
+        # .github/workflows/* cannot be pushed by the Actions token.
+        if rel_str == ".github" or rel_str.startswith(".github/"):
+            rel_str = "[[ dot_github ]]" + rel_str[len(".github"):]
         dest = out / rel_str
         dest.parent.mkdir(parents=True, exist_ok=True)
         try:

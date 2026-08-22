@@ -43,6 +43,14 @@ _exclude:
   - "scripts/make_template.py"
   - ".git"
 
+# Hidden: the template stores the .github directory under a templated name
+# so the generated template branch contains no workflow files (GitHub App
+# tokens may not push those); rendering restores the real path.
+dot_github:
+  type: str
+  default: ".github"
+  when: false
+
 project_name:
   type: str
   help: Lean package name (UpperCamelCase)
