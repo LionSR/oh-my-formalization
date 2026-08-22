@@ -46,6 +46,7 @@ Either way, the only file you'll ever configure afterwards is
 | Paper-gap notes | `docs/paper-gaps/` | policy, template, one demo note; see the `paper-gap-notes` skill in [texra-lean-skills](https://github.com/texra-ai/texra-lean-skills) |
 | Config | `texra-blueprint.toml` | site URLs, source-key registry — the file `paper-gaps check` enforces |
 | CI | `.github/workflows/` | `ci.yml` (Lean build + blueprint gates + reference check), `pages.yml` (site deploy) |
+| Agent skills | `.claude/settings.json` | [texra-lean-skills](https://github.com/texra-ai/texra-lean-skills) auto-installs for Claude Code; other agents run that repo's `install.sh` |
 
 ## The paper-gap discipline
 
