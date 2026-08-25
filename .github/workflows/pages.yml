@@ -37,6 +37,7 @@ jobs:
           mkdir -p _site
           cp -r blueprint/web _site/blueprint
           cp blueprint/print/print.pdf _site/blueprint.pdf
+          python3 scripts/write_badges.py _site/badges
           printf '<!doctype html><meta charset="utf-8"><title>MyProject</title>\n<h1>MyProject</h1>\n<p><a href="blueprint/">Blueprint</a> · <a href="blueprint.pdf">Blueprint (PDF)</a> · <a href="paper-gaps/">Paper-gap notes</a></p>\n' > _site/index.html
       - name: Configure Pages
         uses: actions/configure-pages@v5
