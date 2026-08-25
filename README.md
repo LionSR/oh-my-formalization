@@ -1,5 +1,13 @@
 # oh-my-formalization
 
+[![CI](https://github.com/example/my-project/actions/workflows/ci.yml/badge.svg)](https://github.com/example/my-project/actions/workflows/ci.yml)
+![sorries](https://img.shields.io/endpoint?url=https://example.github.io/my-project/badges/sorries.json)
+![axioms](https://img.shields.io/endpoint?url=https://example.github.io/my-project/badges/axioms.json)
+![Lean](https://img.shields.io/endpoint?url=https://example.github.io/my-project/badges/lean.json)
+![Mathlib](https://img.shields.io/endpoint?url=https://example.github.io/my-project/badges/mathlib.json)
+![blueprint: no \leanok](https://img.shields.io/endpoint?url=https://example.github.io/my-project/badges/blueprint_no_leanok.json)
+![blueprint: not ready](https://img.shields.io/endpoint?url=https://example.github.io/my-project/badges/blueprint_not_ready.json)
+
 > A Lean 4 formalization built from the oh-my-formalization starter.
 
 A starter kit for Lean 4 formalization projects. One `copier copy` gives you
