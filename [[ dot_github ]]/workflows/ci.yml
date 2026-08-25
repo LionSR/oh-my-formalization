@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Lean and the Mathlib cache
+        uses: texra-ai/lean-env-action@v1
+      - name: Build
+        run: lake build
+
+  blueprint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/blueprint-env
+      - name: Check paper-gap references and source keys
+        run: texra-blueprint paper-gaps check
+      - name: Build blueprint (web)
+        working-directory: blueprint
+        run: |
+          set -o pipefail
+          # texra-blueprint web wraps leanblueprint web and fails when the
+          # renderer meets a command it does not know; the log is kept for
+          # the unresolved-label check below.
+          texra-blueprint web 2>&1 | tee /tmp/web.log
+          if grep -q "^ERROR:" /tmp/web.log; then
+            echo "::error::Blueprint has unresolved labels (see ERROR lines above)"
+            exit 1
+          fi
+
+  template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Generate the copier template and render an instance
+        run: |
+          python3 -m pip install -q copier==9.17.2
+          scripts/build_template_branch.sh /tmp/tpl
+          copier copy -d project_name=SmokeProj -d project_title="Smoke Test" \
+            -d repo_slug=smoke/smoke-proj --defaults /tmp/tpl /tmp/inst
+      - name: Verify the rendered instance
+        run: |
+          cd /tmp/inst
+          grep -q "SmokeProj" lakefile.toml
+          grep -q "smoke.github.io/smoke-proj" texra-blueprint.toml
+          test -f SmokeProj/Basic.lean
+          if grep -rn "\[\[\|[[ project_name ]]" --include="*.toml" --include="*.tex" --include="*.lean" --include="*.yml" --include="*.md" . | grep -v copier-answers; then
+            echo "::error::unrendered placeholders or template identity remain"; exit 1
+          fi

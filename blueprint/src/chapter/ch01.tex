@@ -1,0 +1,31 @@
+\chapter{A first result}
+
+This chapter is a worked example of every blueprint construction you will
+need; replace its mathematics with your own. The source is cited as
+\cite{Model2020}, and the paper-gap apparatus is demonstrated by
+\cite{gap:demo_scope_restriction}.
+
+\begin{theorem}[Squares are nonnegative]
+    \label{thm:sq_nonneg}
+    \lean{[[ project_name ]].sq_nonneg}
+    \leanok
+    For every real number \(x\),
+    \begin{align}
+        0 \le x^2. \label{eq:sq_nonneg}
+    \end{align}
+\end{theorem}
+\begin{proof}\leanok
+    The square is a product of two equal factors; a product of two
+    nonpositive or two nonnegative factors is nonnegative.
+\end{proof}
+
+\begin{theorem}[A dependent result]
+    \label{thm:sum_sq_nonneg}
+    \lean{[[ project_name ]].sq_nonneg}
+    \notready
+    \uses{thm:sq_nonneg}
+    A sum of squares is nonnegative, by \eqref{eq:sq_nonneg} applied to each
+    summand. This entry shows a statement whose proof is not yet
+    formalized: it carries \verb|\notready| and its node stays amber in the
+    dependency graph until a Lean proof exists.
+\end{theorem}

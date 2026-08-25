@@ -1,0 +1,17 @@
+name = "[[ project_name ]]"
+defaultTargets = ["[[ project_name ]]"]
+
+[leanOptions]
+# Strict implicit arguments; no auto-bound implicits.
+relaxedAutoImplicit = false
+pp.unicode.fun = true
+# Mathlib's standard linters run during `lake build`.
+weak.linter.mathlibStandardSet = true
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.34.0-rc1"
+
+[[lean_lib]]
+name = "[[ project_name ]]"

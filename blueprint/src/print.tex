@@ -1,0 +1,20 @@
+% Printable (PDF) version of the blueprint; compiled by `leanblueprint pdf`
+% with XeLaTeX. The web version is web.tex.
+\documentclass[a4paper]{report}
+
+\usepackage{geometry}
+\usepackage{expl3}
+\usepackage{amssymb, amsthm, mathtools}
+\usepackage[unicode,colorlinks=true,linkcolor=blue,urlcolor=magenta,citecolor=blue]{hyperref}
+\usepackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+\usepackage{texra_patches}
+
+\input{macros/common}
+\input{macros/print}
+
+\begin{document}
+\maketitle
+\input{chapter/ch01}
+\bibliographystyle{alpha}
+\bibliography{references}
+\end{document}
